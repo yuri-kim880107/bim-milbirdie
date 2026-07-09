@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1E6B45">
+</head>
+<body>
+<title>BIM밀버디</title>
+<style>
+:root{
+  --bg:#EFF3EC; --surface:#FFFFFF; --surface2:#F6F9F4;
+  --ink:#17251C; --muted:#5A6E5F; --faint:#86998B;
+  --line:#DBE4D8; --line2:#E9F0E6;
+  --green:#1B6B44; --green-deep:#0F4A2E; --green-soft:#E3EFE6; --green-ink:#FFFFFF;
+  --gold:#96701A; --gold-soft:#F5ECD3; --gold-hi:#C9A24B;
+  --flag:#B8452F; --flag-soft:#F8E7E1;
+  --maybe:#86691C; --maybe-soft:#F3ECD1;
+  --hero-a:#27835A; --hero-b:#155C3B; --hero-c:#0A3A23;
+  --nav-bg:rgba(255,255,255,.93);
+  --ring-soft:rgba(15,74,46,.13);
+  --shadow:0 1px 2px rgba(15,58,37,.05),0 10px 28px -16px rgba(15,58,37,.22);
+  --radius:16px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0C1510; --surface:#141F18; --surface2:#19271E;
+    --ink:#E6EFE7; --muted:#9DB1A2; --faint:#6D8273;
+    --line:#25362B; --line2:#1E2C22;
+    --green:#4CAE79; --green-deep:#2F7E53; --green-soft:#1C3325; --green-ink:#0B1710;
+    --gold:#D8AC52; --gold-soft:#322909; --gold-hi:#E4C377;
+    --flag:#E06B4E; --flag-soft:#3A1D14;
+    --maybe:#D3B54C; --maybe-soft:#332B0F;
+    --hero-a:#1F6A45; --hero-b:#124630; --hero-c:#07271A;
+    --nav-bg:rgba(15,25,19,.92);
+    --ring-soft:rgba(255,255,255,.09);
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px -16px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1510; --surface:#141F18; --surface2:#19271E;
+  --ink:#E6EFE7; --muted:#9DB1A2; --faint:#6D8273;
+  --line:#25362B; --line2:#1E2C22;
+  --green:#4CAE79; --green-deep:#2F7E53; --green-soft:#1C3325; --green-ink:#0B1710;
+  --gold:#D8AC52; --gold-soft:#322909; --gold-hi:#E4C377;
+  --flag:#E06B4E; --flag-soft:#3A1D14;
+  --maybe:#D3B54C; --maybe-soft:#332B0F;
+  --hero-a:#1F6A45; --hero-b:#124630; --hero-c:#07271A;
+  --nav-bg:rgba(15,25,19,.92);
+  --ring-soft:rgba(255,255,255,.09);
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 12px 32px -16px rgba(0,0,0,.6);
+}
+:root[data-theme="light"]{
+  --bg:#EFF3EC; --surface:#FFFFFF; --surface2:#F6F9F4;
+  --ink:#17251C; --muted:#5A6E5F; --faint:#86998B;
+  --line:#DBE4D8; --line2:#E9F0E6;
+  --green:#1B6B44; --green-deep:#0F4A2E; --green-soft:#E3EFE6; --green-ink:#FFFFFF;
+  --gold:#96701A; --gold-soft:#F5ECD3; --gold-hi:#C9A24B;
+  --flag:#B8452F; --flag-soft:#F8E7E1;
+  --maybe:#86691C; --maybe-soft:#F3ECD1;
+  --hero-a:#27835A; --hero-b:#155C3B; --hero-c:#0A3A23;
+  --nav-bg:rgba(255,255,255,.93);
+  --ring-soft:rgba(15,74,46,.13);
+  --shadow:0 1px 2px rgba(15,58,37,.05),0 10px 28px -16px rgba(15,58,37,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{
+  font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  color:var(--ink); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{
+  font-family:inherit;font-size:15px;color:var(--ink);
+  background:var(--surface2);border:1px solid var(--line);border-radius:11px;
+  padding:11px 13px;width:100%;min-height:46px;
+}
+input[type="checkbox"]{width:auto;min-height:0;accent-color:var(--green)}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--green);outline-offset:0;border-color:transparent}
+textarea{resize:vertical;min-height:76px}
+label{display:block;font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.06em;margin:14px 0 6px}
+label:first-child{margin-top:0}
+a{color:var(--green)}
+.num{font-variant-numeric:tabular-nums}
+
+#app{max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:30;background:var(--bg);
+  display:flex;align-items:center;gap:11px;
+  padding:14px 18px 10px;
+}
+.topbar .mark{
+  width:40px;height:40px;border-radius:13px;flex:none;
+  background:linear-gradient(150deg,var(--hero-a),var(--hero-c));color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 5px 12px -5px rgba(10,58,35,.55);
+}
+.topbar .tt{flex:1;min-width:0}
+.topbar .name{font-size:17.5px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .sub{font-size:9.5px;color:var(--gold);letter-spacing:.24em;font-weight:800}
+.topbar .theme-btn{width:40px;height:40px;border-radius:13px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none;background:var(--surface);box-shadow:var(--shadow)}
+.topbar .theme-btn:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+
+/* ---------- sections / cards ---------- */
+main{padding:2px 16px 28px}
+.view{display:none}
+.view.on{display:block}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.card .pad{padding:16px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:22px 2px 10px}
+.sec-head h2{font-size:15px;font-weight:800;letter-spacing:-.02em}
+.sec-head .cnt{font-size:12px;color:var(--faint);font-weight:700;margin-left:6px}
+.sec-head button{font-size:13px;font-weight:800;color:var(--green);padding:4px 2px}
+.eyebrow{font-size:10px;font-weight:800;letter-spacing:.22em;color:var(--gold);margin-bottom:6px}
+.empty{padding:34px 16px;text-align:center;color:var(--faint);font-size:13.5px;line-height:1.7}
+.empty b{color:var(--muted)}
+
+/* hero (home) — 멤버십 카드 */
+.hero{
+  background:linear-gradient(158deg,var(--hero-a) 0%,var(--hero-b) 52%,var(--hero-c) 100%);
+  color:#fff;border:none;border-radius:20px;
+  box-shadow:0 16px 36px -18px rgba(7,42,26,.6),inset 0 1px 0 rgba(255,255,255,.16);
+  padding:22px 20px 20px;margin-bottom:14px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 26px,rgba(255,255,255,0) 26px 52px);
+}
+.hero::after{
+  content:"";position:absolute;right:-56px;top:-64px;width:230px;height:230px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.15),transparent 64%);
+}
+.hero>*{position:relative;z-index:1}
+.hero .hy{font-size:10px;font-weight:800;letter-spacing:.28em;color:var(--gold-hi);margin-bottom:10px}
+.hero .hy::after{content:"";display:block;width:26px;height:2px;border-radius:2px;background:var(--gold-hi);opacity:.85;margin-top:8px}
+.hero .dday{font-size:42px;font-weight:900;letter-spacing:-.035em;line-height:1.02;text-shadow:0 2px 16px rgba(0,0,0,.2)}
+.hero .ev{margin-top:11px;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.hero .meta{margin-top:3px;font-size:12.5px;color:rgba(255,255,255,.74)}
+.hero .rsvp-line{margin-top:14px;display:flex;gap:7px}
+.hero .rsvp-line span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700}
+.hero.none .dday{font-size:19px;font-weight:800;text-shadow:none;letter-spacing:-.01em}
+.hero button.go{margin-top:15px;background:#fff;color:var(--hero-c);font-weight:800;font-size:13.5px;padding:12px 19px;min-height:44px;border-radius:999px;box-shadow:0 7px 18px -7px rgba(0,0,0,.4)}
+.hero button.go:focus-visible{outline:2px solid #fff;outline-offset:3px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 8px 12px;text-align:center;box-shadow:var(--shadow)}
+.stat .v{font-size:22px;font-weight:900;letter-spacing:-.03em;line-height:1.15}
+.stat .k{font-size:10.5px;color:var(--faint);font-weight:800;letter-spacing:.08em;margin-top:4px}
+
+/* notice */
+.notice-row{display:flex;gap:10px;padding:13px 16px;border-top:1px solid var(--line2);align-items:flex-start}
+.notice-row:first-child{border-top:none}
+.notice-row .flagdot{width:7px;height:7px;border-radius:50%;background:var(--flag);box-shadow:0 0 0 3px var(--flag-soft);margin-top:7px;flex:none}
+.notice-row .tx{flex:1;font-size:13.5px;white-space:pre-wrap}
+.notice-row .dt{font-size:11px;color:var(--faint);margin-top:3px;letter-spacing:.02em}
+.notice-row .del{color:var(--faint);font-size:17px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:9px;margin:-5px -8px 0 0;line-height:1}
+.notice-row .del:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+
+/* ---------- events ---------- */
+.ev-row{display:flex;gap:13px;padding:14px 16px;min-height:64px;border-top:1px solid var(--line2);align-items:center;width:100%;text-align:left}
+.ev-row:first-child{border-top:none}
+.datebox{width:54px;flex:none;text-align:center;border-radius:13px;padding:8px 0 7px;background:var(--green-soft);color:var(--green);box-shadow:inset 0 0 0 1px var(--ring-soft)}
+.datebox .m{font-size:9.5px;font-weight:800;letter-spacing:.14em}
+.datebox .d{font-size:20px;font-weight:900;line-height:1.1;letter-spacing:-.02em}
+.ev-row.past .datebox{background:var(--surface2);color:var(--faint);box-shadow:inset 0 0 0 1px var(--line2)}
+.ev-row .bd{flex:1;min-width:0}
+.ev-row .t{font-weight:800;font-size:14.5px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-row .m2{font-size:12.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-row .badges{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:800;border-radius:6px;padding:2.5px 7px;letter-spacing:.01em}
+.pill.g{background:var(--green-soft);color:var(--green)}
+.pill.y{background:var(--maybe-soft);color:var(--maybe)}
+.pill.r{background:var(--flag-soft);color:var(--flag)}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
+.chev{color:var(--faint);flex:none}
+
+/* ---------- members ---------- */
+.mem-row{display:flex;gap:13px;padding:13px 16px;min-height:64px;border-top:1px solid var(--line2);align-items:center;width:100%;text-align:left}
+.mem-row:first-child{border-top:none}
+.avatar{width:44px;height:44px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;background:var(--green-soft);color:var(--green);box-shadow:inset 0 0 0 1.5px var(--ring-soft)}
+.mem-row .bd{flex:1;min-width:0}
+.mem-row .nm{font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+.mem-row .nm .role{font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.02em;margin-left:6px}
+.mem-row .m2{font-size:12px;color:var(--muted);margin-top:2px}
+.searchbar{position:relative;margin-bottom:12px}
+.searchbar input{padding-left:38px;background:var(--surface);box-shadow:var(--shadow);border-radius:13px}
+.searchbar svg{position:absolute;left:13px;top:15px;color:var(--faint)}
+
+/* ---------- rules ---------- */
+.rule{padding:16px;border-top:1px solid var(--line2)}
+.rule:first-child{border-top:none}
+.rule h3{font-size:14px;font-weight:800;margin-bottom:5px;color:var(--green);letter-spacing:-.01em}
+.rule p{font-size:13.5px;white-space:pre-wrap}
+.draftband{background:var(--gold-soft);color:var(--gold);border:1px solid var(--ring-soft);font-size:12.5px;font-weight:700;padding:11px 14px;border-radius:12px;margin-bottom:12px;line-height:1.5}
+
+/* ---------- more ---------- */
+.menu-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;min-height:60px;border-top:1px solid var(--line2);font-size:14.5px;font-weight:700;letter-spacing:-.01em}
+.menu-row:first-child{border-top:none}
+.menu-row .ic{width:36px;height:36px;border-radius:11px;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:inset 0 0 0 1px var(--ring-soft)}
+.menu-row .sub{display:block;font-size:12px;color:var(--faint);font-weight:500;letter-spacing:0;margin-top:1px}
+.menu-row .bd{flex:1}
+.menu-row:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+
+/* ---------- bottom nav ---------- */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:40;
+  background:var(--nav-bg);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+nav .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;min-height:54px;color:var(--faint);font-size:10.5px;font-weight:700;letter-spacing:.02em;transition:color .15s}
+nav button::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:0;height:3px;border-radius:0 0 3px 3px;background:var(--green);transition:width .18s}
+nav button.on{color:var(--green);font-weight:800}
+nav button.on::before{width:24px}
+nav button:focus-visible{outline:2px solid var(--green);outline-offset:-2px;border-radius:8px}
+
+/* ---------- sheet ---------- */
+#sheetWrap{position:fixed;inset:0;z-index:60;display:none}
+#sheetWrap.open{display:block}
+#sheetWrap .bk{position:absolute;inset:0;background:rgba(7,17,11,.52);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#sheet{
+  position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow-y:auto;
+  background:var(--surface);border-radius:24px 24px 0 0;
+  border:1px solid var(--line);border-bottom:none;
+  max-width:520px;margin:0 auto;
+  box-shadow:0 -20px 50px -22px rgba(0,0,0,.4);
+  padding:10px 18px calc(20px + env(safe-area-inset-bottom));
+  animation:up .24s cubic-bezier(.22,1,.36,1);
+}
+@keyframes up{from{transform:translateY(46px);opacity:.35}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){#sheet{animation:none}}
+#sheet .grab{width:40px;height:4.5px;border-radius:3px;background:var(--line);margin:4px auto 14px}
+#sheet h3.sh{font-size:17px;font-weight:800;margin-bottom:4px;letter-spacing:-.02em}
+.btnrow{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;border-radius:14px;padding:13px;min-height:48px;font-size:14.5px;font-weight:800;text-align:center}
+.btn.pri{background:linear-gradient(180deg,var(--green) 0%,var(--green-deep) 150%);color:var(--green-ink);box-shadow:0 8px 18px -9px rgba(15,74,46,.55)}
+.btn.ghost{background:var(--surface2);border:1px solid var(--line);color:var(--muted)}
+.btn.danger{background:var(--flag-soft);color:var(--flag)}
+.btn:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.formrow2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* rsvp chips in event sheet */
+.rsvp-mem{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line2)}
+.rsvp-mem:first-child{border-top:none}
+.rsvp-mem .n{flex:1;font-weight:700;font-size:14px}
+.tri{display:flex;gap:5px}
+.tri button{font-size:12px;font-weight:800;min-height:40px;padding:8px 12px;border-radius:11px;background:var(--surface2);border:1px solid var(--line);color:var(--faint)}
+.tri button:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+.tri button.on.y{background:var(--green);border-color:var(--green);color:var(--green-ink);box-shadow:0 4px 10px -5px rgba(15,74,46,.6)}
+.tri button.on.m{background:var(--maybe-soft);border-color:var(--maybe);color:var(--maybe)}
+.tri button.on.n{background:var(--flag-soft);border-color:var(--flag);color:var(--flag)}
+.mini{font-size:11px;font-weight:800;min-height:36px;padding:6px 9px;border-radius:10px;background:var(--surface2);border:1px solid var(--line);color:var(--faint);flex:none}
+.mini:focus-visible{outline:2px solid var(--green);outline-offset:1px}
+.mini.on-r{background:var(--flag-soft);border-color:var(--flag);color:var(--flag)}
+.mini.on-g{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.score-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line2)}
+.score-row:first-child{border-top:none}
+.score-row .n{flex:1;font-weight:700;font-size:14px}
+.score-row input{width:86px;text-align:center;padding:8px;min-height:40px}
+.rank-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line2)}
+.rank-row .rk{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;background:var(--surface2);color:var(--muted);flex:none;box-shadow:inset 0 0 0 1px var(--line2)}
+.rank-row:first-child .rk{background:var(--gold-soft);color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-hi)}
+.rank-row .n{flex:1;font-weight:700;font-size:14px}
+.rank-row .s{font-weight:900;font-size:15px;letter-spacing:-.02em}
+
+/* ---------- lock (암호 잠금) ---------- */
+#lockWrap{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(158deg,var(--hero-a) 0%,var(--hero-b) 55%,var(--hero-c) 100%)}
+#lockWrap.off{display:none}
+.lock-card{width:min(320px,86vw);text-align:center;color:#fff;padding-bottom:env(safe-area-inset-bottom)}
+.lock-mark{width:58px;height:58px;border-radius:17px;background:rgba(255,255,255,.13);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+.lock-eyebrow{font-size:10.5px;letter-spacing:.26em;font-weight:800;opacity:.65}
+.lock-title{font-size:23px;font-weight:900;letter-spacing:-.02em;margin:4px 0 5px}
+.lock-sub{font-size:13px;opacity:.78;margin-bottom:24px}
+.lock-dots{display:flex;gap:15px;justify-content:center;margin-bottom:28px}
+.lock-dots i{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.45);transition:background .12s}
+.lock-dots i.f{background:var(--gold-hi);border-color:var(--gold-hi)}
+.lock-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.lock-pad button{height:56px;border-radius:14px;background:rgba(255,255,255,.1);color:#fff;font-size:21px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.lock-pad button:active{background:rgba(255,255,255,.26)}
+.lock-pad button:focus-visible{outline:2px solid var(--gold-hi);outline-offset:2px}
+.lock-pad button.blank{background:none;box-shadow:none;pointer-events:none}
+.lock-err{font-size:12.5px;color:#FFD9CF;height:18px;margin-top:15px;font-weight:700}
+@keyframes lockshake{0%,100%{transform:none}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.lock-dots.shake{animation:lockshake .32s}
+@media (prefers-reduced-motion:reduce){.lock-dots.shake{animation:none}}
+
+/* toast */
+#toast{
+  position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;
+  padding:10px 18px;border-radius:999px;z-index:80;opacity:0;pointer-events:none;transition:opacity .2s;
+  box-shadow:0 10px 26px -10px rgba(0,0,0,.45);
+  max-width:86%;text-align:center;
+}
+#toast.on{opacity:1}
+.hint{font-size:12px;color:var(--faint);line-height:1.6;margin-top:8px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+
+<div id="lockWrap" role="dialog" aria-label="모임 암호 입력">
+  <div class="lock-card">
+    <div class="lock-mark">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21V4"/><path d="M8 4l9 3.5L8 11"/><circle cx="15" cy="19.5" r="1.6" fill="currentColor" stroke="none"/></svg>
+    </div>
+    <div class="lock-eyebrow">GOLF SOCIETY</div>
+    <div class="lock-title">BIM밀버디</div>
+    <div class="lock-sub">모임 암호 4자리를 입력하세요</div>
+    <div class="lock-dots" id="lockDots"><i></i><i></i><i></i><i></i></div>
+    <div class="lock-pad">
+      <button onclick="pinPress('1')">1</button><button onclick="pinPress('2')">2</button><button onclick="pinPress('3')">3</button>
+      <button onclick="pinPress('4')">4</button><button onclick="pinPress('5')">5</button><button onclick="pinPress('6')">6</button>
+      <button onclick="pinPress('7')">7</button><button onclick="pinPress('8')">8</button><button onclick="pinPress('9')">9</button>
+      <button class="blank" tabindex="-1"></button><button onclick="pinPress('0')">0</button><button onclick="pinPress('del')" aria-label="지우기">⌫</button>
+    </div>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="mark" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 21V4"/><path d="M8 4l9 3.5L8 11"/><circle cx="15" cy="19.5" r="1.6" fill="currentColor" stroke="none"/></svg>
+    </div>
+    <div class="tt">
+      <div class="sub">GOLF SOCIETY</div>
+      <div class="name" id="clubName">BIM밀버디</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="화면 테마 전환">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+    </button>
+  </div>
+
+  <main>
+    <section class="view" id="view-home"></section>
+    <section class="view" id="view-events"></section>
+    <section class="view" id="view-members"></section>
+    <section class="view" id="view-more"></section>
+    <section class="view" id="view-rules"></section>
+    <section class="view" id="view-fees"></section>
+  </main>
+</div>
+
+<nav aria-label="주 메뉴"><div class="in">
+  <button data-tab="home" class="on">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>홈
+  </button>
+  <button data-tab="events">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>일정
+  </button>
+  <button data-tab="members">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c.8-3.4 3.4-5 6.5-5s5.7 1.6 6.5 5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17.8 15.2c2 .7 3.3 2.2 3.7 4.8"/></svg>멤버
+  </button>
+  <button data-tab="more">
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>더보기
+  </button>
+</div></nav>
+
+<div id="sheetWrap" role="dialog" aria-modal="true">
+  <div class="bk" onclick="closeSheet()"></div>
+  <div id="sheet"><div class="grab"></div><div id="sheetBody"></div></div>
+</div>
+
+<div id="toast" role="status"></div>
+<input type="file" id="importInput" accept=".json,application/json" style="display:none">
+
+<script>
+/* ================= viewport / theme ================= */
+if(!document.querySelector('meta[name="viewport"]')){
+  const m=document.createElement('meta');m.name='viewport';
+  m.content='width=device-width,initial-scale=1,viewport-fit=cover';
+  document.head.appendChild(m);
+}
+document.getElementById('themeBtn').onclick=()=>{
+  const r=document.documentElement;
+  const dark=r.getAttribute('data-theme')==='dark'||(r.getAttribute('data-theme')!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  r.setAttribute('data-theme',dark?'light':'dark');
+  try{localStorage.setItem('bmb.theme',dark?'light':'dark')}catch(e){}
+};
+try{const t=localStorage.getItem('bmb.theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+
+/* ================= 암호 잠금 =================
+   모임 암호(4자리). 변경 시 이 값을 바꿔 재배포하면 모든 멤버에게 적용됩니다. */
+const APP_PIN='2026';
+function pinHash(p){let h=7;for(const c of String(p)+'|bmb')h=(h*131+c.charCodeAt(0))>>>0;return h.toString(36);}
+let pinBuf='';
+function pinRender(){[...document.querySelectorAll('#lockDots i')].forEach((d,i)=>d.classList.toggle('f',i<pinBuf.length));}
+function unlockApp(){document.getElementById('lockWrap').classList.add('off');}
+function pinPress(k){
+  const errEl=document.getElementById('lockErr');errEl.textContent='';
+  if(k==='del'){pinBuf=pinBuf.slice(0,-1);pinRender();return;}
+  if(pinBuf.length>=4)return;
+  pinBuf+=k;pinRender();
+  if(pinBuf.length===4){
+    if(pinBuf===APP_PIN){
+      try{localStorage.setItem('bmb.auth',pinHash(APP_PIN));}catch(e){}
+      setTimeout(unlockApp,150);
+    }else{
+      const dots=document.getElementById('lockDots');
+      dots.classList.add('shake');
+      errEl.textContent='암호가 올바르지 않습니다';
+      setTimeout(()=>{dots.classList.remove('shake');pinBuf='';pinRender();},380);
+    }
+  }
+}
+try{if(localStorage.getItem('bmb.auth')===pinHash(APP_PIN))unlockApp();}catch(e){}
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('lockWrap').classList.contains('off'))return;
+  if(/^[0-9]$/.test(e.key))pinPress(e.key);
+  else if(e.key==='Backspace')pinPress('del');
+});
+
+/* ================= 실시간 공유 설정 =================
+   Firebase Realtime Database URL을 넣으면 모든 멤버 기기에 실시간 반영됩니다.
+   예: const SYNC_URL='https://bim-milbirdie-default-rtdb.asia-southeast1.firebasedatabase.app/club.json';
+   비워두면(현재) 이 기기에만 저장됩니다. */
+const SYNC_URL='';
+
+/* ================= state ================= */
+const VENUE_EVEN='동명사옥', VENUE_ODD='골프존파크 갈현 지식정보타운';
+const FEE_DEFAULT=120000;
+const DEFAULT_RULES=[
+ {t:'1. 모임 취지',b:'BIM밀버디는 설계사 및 BIM 업계 종사자들이 골프를 매개로 가볍게 교류하고, 건강한 네트워킹을 이어가는 소모임이다.\n• 설계사 및 BIM 관련 종사자 간 교류와 네트워킹\n• 골프를 통한 건강한 친목 도모\n• 밝고 투명한 분위기 속에서 편하게 참여할 수 있는 모임 지향\n• 업계 내 좋은 인연과 지속적인 교류 형성'},
+ {t:'2. 운영진 구성',b:'운영기간은 1년으로 하며, 2027년 첫 모임에서 재선출한다.\n• 회장: 하재영 이사\n• 부회장 겸 총무: 김유리 차장\n• 감사: 한의석 전무'},
+ {t:'3. 정기모임 운영 방향',b:'• 스크린 모임: 매달 둘째 주 수요일 저녁 7시 원칙\n  - 장소: 짝수달 동명사옥, 홀수달 골프존파크 갈현 지식정보타운\n• 필드 모임: 참여 인원 및 일정 조율 후 진행\n• 필요 시 운영진 협의에 따라 일정 조정 가능\n\n2026년 하반기 주요 일정\n• 7월 29일(수) 저녁 6시: 스크린 모임\n• 12월 9일(수): 송년회\n\n2027년부터 춘계(4월 중)·추계(10월 중) 필드 모임을 연 2회 정례화한다. 날짜는 추후 공지하며, 회원 간 자유로운 번개 모집도 가능하다.'},
+ {t:'4. 멤버 및 게스트 운영',b:'추가 초대는 설계사 및 BIM 관련 종사자에 한해 기존 회원의 추천으로 하며, 초대 희망자는 운영진에게 개인 연락으로 전달한다.\n• 게스트는 최대 2회 참석 가능\n• 이후 지속 참여를 원할 경우, 기존 멤버 1/3 이상 동의 시 정회원 전환 가능\n※ 2026년 12월까지는 한시적으로 게스트 정책을 제한하지 않으며, 2027년부터 적용한다.'},
+ {t:'5. 비용 및 회비 운영',b:'스크린 및 필드 참석 비용은 각자 실비 부담을 원칙으로 한다.\n• 스크린: 게임비 각자 부담 / 필드: 그린피 및 개인 비용 각자 부담\n• 초대·게스트가 와도 비용은 1/N 원칙\n\n회비는 지속적인 모임 운영과 연말 행사, 필드 모임 지원 등을 위해 운영한다.\n• 연회비: 12만 원(정회원 기준)\n• 회계 관리: 부회장 겸 총무 / 분기 또는 반기별 사용내역 공유\n• 2026년 말까지는 회비를 사용하지 않고 적립하는 것을 원칙으로 한다.\n\n2027년부터 회비 사용 항목\n• 춘계·추계 필드 모임 시 캐디피·카트비 전액 지원\n• 연말 송년회 식사 비용 일부 지원\n• 단체 진행비 및 공용 운영비(26년 현수막 제작 예정)\n\n홀인원을 할 경우 회비로 명패를 만들어 주고, 홀인원 한 사람은 식사비용의 일부를 지원한다(예: 10만 원, 금액을 강요하지 않음).\n\n회비는 모임의 공통 운영 목적에 한해 사용하며 개인 용도로 사용하지 않는다. 남은 회비는 연말 송년회 식사 비용 또는 다음 연도 운영비로 이월한다.'},
+ {t:'6. 참석 및 취소',b:'• 참석 확정 후 취소가 필요한 경우, 대체자 투입 시 변경 가능하다.\n• 대체자 투입이 되지 않을 경우 예약 및 진행에 따른 비용은 본인이 부담한다.\n• 사전 공유 없는 노쇼가 3회 이상 반복될 경우, 모임 운영상 제외될 수 있다.'},
+ {t:'7. 기본 원칙 및 매너',b:'• 서로 존중하는 태도는 기본\n• 편가르기, 욕설, 비방, 뒷담화, 이간질 금지\n• 타인에게 불편을 주는 언행 발생 시 운영진 판단에 따라 제외 가능\n• 과도한 영업, 목적성 접근, 불편한 권유 지양\n• 골프 비매너 금지\n• 훈수두기 금지 — 레슨·코칭은 상대방이 원할 때만\n• 과도하게 놀리거나 부담 주는 분위기 금지\n• 과한 승부욕 또는 내기로 분위기를 흐리는 행동 지양\n\n실력보다 중요한 것은 함께 즐겁게 치는 분위기이며, 서로 배려하면서 매너 있게 라운드한다.'},
+ {t:'8. 연말 이벤트',b:'2026년 송년회는 12월 9일 진행하며, 회원 간 교류를 위해 마니또 행사를 함께 진행한다.\n• 마니또 선물 금액: 1인당 3만~5만 원 상당\n• 세부 진행 방식은 송년회 전 별도 공지'}
+];
+const SEED_MEMBERS=[
+ ['m01','하재영','회장','이사'],['m02','김유리','부회장·총무','차장'],['m03','서현우','회원','동명 상무'],
+ ['m04','한의석','감사','전무'],['m05','김기룡','회원','이사 · 스크린모임 파트장'],['m06','김성욱','회원','다산컨설턴트 전무'],
+ ['m07','정혜나','회원','빔스온탑 대표'],['m08','임성순','회원','상무'],['m09','박태원','회원','동일기술공사 이사'],
+ ['m10','김진영','회원','한울씨앤비 상무'],['m11','엄병주','회원',''],['m12','이건','회원','대표 · 필드모임 파트장'],
+ ['m13','이재영','회원',''],['m14','이화형','회원','베이시스소프트 전무'],['m15','최재웅','회원','대표'],['m16','주영돈','회원','아이디엠 상무']
+];
+function freshState(){
+  return {
+    club:{name:'BIM밀버디',intro:'설계사·BIM 업계 종사자들의 골프 교류 모임',founded:'2026'},
+    notices:[],
+    members:SEED_MEMBERS.map(m=>({id:m[0],name:m[1],role:m[2],mtype:'정회원',handicap:'',phone:'',joined:'',memo:m[3]})),
+    events:[
+      {id:'e11',title:'사전 번개 스크린',date:'2026-03-28',time:'19:00',place:'골프존파크 관양 파라다이스',fee:'',memo:'모임 결성 전 첫 사전 모임 (3명)',type:'light',rsvp:{m02:'yes',m04:'yes',m15:'yes'},scores:{},noshow:{},hio:{}},
+      {id:'e12',title:'제1회 정기 스크린 (창립 모임)',date:'2026-04-10',time:'19:00',place:'골프존파크 관양 파라다이스',fee:'',memo:'총 10명 · G투어 스트로크 + 이벤트홀 · 1위 하재영(초대 회장) · 김유리 부회장 겸 총무 선출\n※ 참석 체크는 카톡에서 확인된 인원만 입력됨 — 보완해 주세요',type:'screen',rsvp:{m01:'yes',m02:'yes',m03:'yes',m04:'yes',m05:'yes',m11:'yes',m12:'yes',m14:'yes',m07:'no',m08:'no',m15:'no',m16:'no'},scores:{},noshow:{},hio:{}},
+      {id:'e13',title:'4월 필드 라운딩',date:'2026-04-29',time:'08:11',place:'크리스밸리CC',fee:'110000',memo:'2팀 8명(게스트 1명 포함) · 1조 김성욱·하재영·이건·최재웅 / 2조 김기룡·한의석·김유리·게스트',type:'field',rsvp:{m01:'yes',m02:'yes',m04:'yes',m05:'yes',m06:'yes',m12:'yes',m15:'yes'},scores:{},noshow:{},hio:{}},
+      {id:'e14',title:'제2회 정기 스크린',date:'2026-05-13',time:'19:00',place:'골프존파크 갈현 지식정보타운',fee:'',memo:'총 6명 · 갈현점 "BIM밀버디" 언급 시 3천 원 상시 할인',type:'screen',rsvp:{m01:'yes',m02:'yes',m05:'yes',m11:'yes',m14:'yes',m16:'yes'},scores:{},noshow:{},hio:{}},
+      {id:'e15',title:'6월 필드 번개',date:'2026-06-05',time:'',place:'',fee:'',memo:'총 8명(게스트 2명 포함) · 장소 기록 없음 — 확인 후 입력해 주세요',type:'field',rsvp:{m02:'yes'},scores:{},noshow:{},hio:{}},
+      {id:'e16',title:'깜짝 번개 스크린',date:'2026-06-30',time:'18:30',place:'동명사옥',fee:'',memo:'',type:'light',rsvp:{m02:'yes',m03:'yes'},scores:{},noshow:{},hio:{}},
+      {id:'e17',title:'운영 논의 저녁 모임',date:'2026-07-08',time:'18:30',place:'사당',fee:'',memo:'7월 스크린 대체 · 운영 방향 논의 식사 자리',type:'event',rsvp:{m02:'yes',m03:'yes',m06:'yes',m07:'yes',m09:'yes',m16:'yes',m10:'no',m14:'no',m15:'no'},scores:{},noshow:{},hio:{}},
+      {id:'e01',title:'7월 스크린 모임',date:'2026-07-29',time:'18:00',place:'추후 공지',fee:'',memo:'',type:'screen',rsvp:{},scores:{},noshow:{},hio:{}},
+      {id:'e02',title:'송년회 · 마니또',date:'2026-12-09',time:'',place:'',fee:'',memo:'마니또 선물 1인당 3만~5만 원 상당, 세부 방식 별도 공지',type:'event',rsvp:{},scores:{},noshow:{},hio:{}}
+    ],
+    rules:DEFAULT_RULES.map((r,i)=>({id:'r'+i,title:r.t,body:r.b})),
+    rulesDraft:false,rulesUpdated:'2026-07-09',
+    fees:{'2026':{amount:FEE_DEFAULT,paid:{
+      m01:[1,2],m02:[1,2],m03:[1,2],m04:[1,2],m05:[1,2],m06:[1,2],m07:[1,2],
+      m09:[1,2],m10:[1,2],m11:[1,2],m12:[1,2],m13:[1,2],m16:[1,2],
+      m14:[1,2,3,4],m15:[1,2,3,4]
+    },expenses:[]}},manito:null
+  };
+}
+let S;
+try{S=JSON.parse(localStorage.getItem('bmb.v1'))||freshState();}catch(e){S=freshState();}
+/* 구버전·서버 데이터 정규화 (Firebase는 빈 객체/배열 키를 제거하므로 필수) */
+function normalizeState(){
+  S.club=S.club||{name:'BIM밀버디',intro:'',founded:''};
+  S.notices=S.notices||[];S.members=S.members||[];S.events=S.events||[];S.rules=S.rules||[];
+  S.fees=S.fees||{};S.manito=S.manito||null;
+  Object.values(S.fees).forEach(F=>{
+    F.paid=F.paid||{};F.expenses=F.expenses||[];
+    Object.keys(F.paid).forEach(k=>{if(!Array.isArray(F.paid[k]))F.paid[k]=[1,2,3,4];});
+  });
+  S.members.forEach(m=>{if(!m.mtype)m.mtype='정회원';});
+  S.events.forEach(e=>{e.rsvp=e.rsvp||{};e.scores=e.scores||{};e.noshow=e.noshow||{};e.hio=e.hio||{};if(!e.type)e.type='';});
+}
+normalizeState();
+function save(){
+  try{localStorage.setItem('bmb.v1',JSON.stringify(S));}catch(e){toast('저장 공간이 부족합니다. 백업 후 오래된 데이터를 정리해 주세요.');}
+  syncPush();
+}
+
+/* ================= 실시간 동기화 (Firebase RTDB REST/SSE) ================= */
+let syncState=SYNC_URL?'connecting':'off'; /* off | connecting | on | error */
+let applyingRemote=false,pushTimer=null;
+function syncLabel(){return {off:'미설정 · 이 기기에만 저장',connecting:'연결 중…',on:'실시간 공유 연결됨',error:'연결 끊김 · 재시도 중'}[syncState];}
+function syncPush(){
+  if(!SYNC_URL||applyingRemote)return;
+  clearTimeout(pushTimer);
+  pushTimer=setTimeout(async()=>{
+    try{
+      const r=await fetch(SYNC_URL,{method:'PUT',body:JSON.stringify(S)});
+      syncState=r.ok?'on':'error';
+    }catch(e){syncState='error';}
+  },400);
+}
+function applyRemote(remote){
+  if(!remote||!remote.members)return;
+  if(JSON.stringify(remote)===JSON.stringify(S))return;
+  applyingRemote=true;
+  S=remote;normalizeState();
+  try{localStorage.setItem('bmb.v1',JSON.stringify(S));}catch(e){}
+  applyingRemote=false;
+  el('#clubName').textContent=S.club.name;
+  if(!el('#sheetWrap').classList.contains('open'))rerenderCurrent();
+}
+async function syncRefetch(){
+  try{const r=await fetch(SYNC_URL);if(r.ok){applyRemote(await r.json());syncState='on';}}
+  catch(e){syncState='error';}
+}
+async function syncInit(){
+  if(!SYNC_URL)return;
+  try{
+    const r=await fetch(SYNC_URL);
+    if(r.ok){
+      const remote=await r.json();
+      if(remote&&remote.members){applyRemote(remote);}
+      else{await fetch(SYNC_URL,{method:'PUT',body:JSON.stringify(S)});} /* 서버가 비어 있으면 최초 업로드 */
+      syncState='on';
+    }
+  }catch(e){syncState='error';}
+  try{
+    const es=new EventSource(SYNC_URL);
+    es.addEventListener('put',ev=>{
+      try{
+        const d=JSON.parse(ev.data);
+        if(d&&d.path==='/'){if(d.data)applyRemote(d.data);}
+        else syncRefetch();
+      }catch(e){}
+    });
+    es.addEventListener('patch',()=>syncRefetch());
+    es.onopen=()=>{syncState='on';};
+    es.onerror=()=>{if(syncState==='on')syncState='error';};
+  }catch(e){syncState='error';}
+}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ================= helpers ================= */
+const el=q=>document.querySelector(q);
+const WD=['일','월','화','수','목','금','토'];
+function fmtDate(ds){if(!ds)return'';const d=new Date(ds+'T00:00:00');if(isNaN(d))return ds;
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${WD[d.getDay()]})`;}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dday(ds){const a=new Date(ds+'T00:00:00'),b=new Date(todayStr()+'T00:00:00');return Math.round((a-b)/86400000);}
+function toast(msg){const t=el('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2200);}
+function memberName(id){const m=S.members.find(m=>m.id===id);return m?m.name:'(탈퇴 멤버)';}
+function rsvpCounts(ev){const v=Object.values(ev.rsvp||{});return{y:v.filter(x=>x==='yes').length,m:v.filter(x=>x==='maybe').length,n:v.filter(x=>x==='no').length};}
+const EVT={screen:{n:'스크린',c:'g'},field:{n:'필드',c:'gold'},event:{n:'행사',c:'r'},light:{n:'번개',c:'y'}};
+function typePill(e){const t=EVT[e.type];return t?`<span class="pill ${t.c}">${t.n}</span>`:'';}
+function noshowCount(mid){return S.events.filter(e=>e.date<todayStr()&&(e.noshow||{})[mid]).length;}
+function hioEvents(mid){return S.events.filter(e=>(e.hio||{})[mid]);}
+function getFees(y){S.fees[y]=S.fees[y]||{amount:FEE_DEFAULT,paid:{},expenses:[]};return S.fees[y];}
+function fmtWon(n){return Number(n||0).toLocaleString('ko-KR')+'원';}
+function openSheet(html){el('#sheetBody').innerHTML=html;el('#sheetWrap').classList.add('open');}
+function closeSheet(){el('#sheetWrap').classList.remove('open');}
+
+/* ================= tabs ================= */
+const RENDERERS={home:renderHome,events:renderEvents,members:renderMembers,more:renderMore,rules:renderRules,fees:renderFees};
+let currentTab='home';
+function showTab(name){
+  currentTab=name;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  el('#view-'+name).classList.add('on');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+  window.scrollTo(0,0);
+  RENDERERS[name]();
+}
+function rerenderCurrent(){try{RENDERERS[currentTab]();}catch(e){}}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+
+/* ================= HOME ================= */
+function renderHome(){
+  el('#clubName').textContent=S.club.name;
+  const today=todayStr();
+  const next=S.events.filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  let hero;
+  if(next){
+    const d=dday(next.date),c=rsvpCounts(next);
+    hero=`<div class="hero">
+      <div class="hy">NEXT ROUND</div>
+      <div class="dday num">${d===0?'오늘 라운드':'D-'+d}</div>
+      <div class="ev">${esc(next.title)}</div>
+      <div class="meta">${fmtDate(next.date)}${next.time?' · '+esc(next.time):''}${next.place?' · '+esc(next.place):''}</div>
+      <div class="rsvp-line num"><span>참석 ${c.y}</span><span>미정 ${c.m}</span><span>불참 ${c.n}</span></div>
+      <button class="go" onclick="openEventDetail('${next.id}')">참석 체크 →</button>
+    </div>`;
+  }else{
+    hero=`<div class="hero none">
+      <div class="hy">NEXT ROUND</div>
+      <div class="dday">예정된 라운드가 없습니다</div>
+      <button class="go" onclick="openEventForm()">라운드 일정 만들기 →</button>
+    </div>`;
+  }
+  const yr=new Date().getFullYear();
+  const rounds=S.events.filter(e=>e.type!=='event'&&e.date&&e.date.startsWith(String(yr))&&e.date<=today).length;
+  const F=getFees(yr);
+  const bal=S.members.filter(m=>m.mtype!=='게스트').reduce((s,m)=>s+((F.paid[m.id]||[]).length),0)*(F.amount/4)
+    -F.expenses.reduce((s,x)=>s+Number(x.amount||0),0);
+  const notices=S.notices.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  el('#view-home').innerHTML=`
+    ${hero}
+    <div class="stats num">
+      <div class="stat"><div class="v">${S.members.length}</div><div class="k">멤버</div></div>
+      <div class="stat"><div class="v">${rounds}</div><div class="k">올해 라운드</div></div>
+      <div class="stat" onclick="showTab('fees')" style="cursor:pointer"><div class="v">${(bal/10000).toLocaleString()}만</div><div class="k">회비 잔액</div></div>
+    </div>
+    <div class="sec-head"><h2>공지사항</h2><button onclick="openNoticeForm()">+ 등록</button></div>
+    <div class="card">${notices.length?notices.map(n=>`
+      <div class="notice-row"><span class="flagdot"></span>
+        <div class="tx">${esc(n.text)}<div class="dt num">${fmtDate(n.date)}</div></div>
+        <button class="del" onclick="delNotice('${n.id}')" aria-label="공지 삭제">×</button>
+      </div>`).join(''):'<div class="empty">등록된 공지가 없습니다.<br>모임 소식을 <b>+ 등록</b>으로 남겨보세요.</div>'}
+    </div>`;
+}
+function openNoticeForm(){
+  openSheet(`<h3 class="sh">공지 등록</h3>
+    <label for="nt">내용</label><textarea id="nt" placeholder="예) 8월 정기 라운드 조편성 안내"></textarea>
+    <div class="btnrow"><button class="btn ghost" onclick="closeSheet()">취소</button>
+    <button class="btn pri" onclick="saveNotice()">등록</button></div>`);
+}
+function saveNotice(){
+  const t=el('#nt').value.trim();if(!t){toast('내용을 입력해 주세요.');return;}
+  S.notices.push({id:uid(),text:t,date:todayStr()});save();closeSheet();renderHome();toast('공지를 등록했습니다.');
+}
+function delNotice(id){if(!confirm('이 공지를 삭제할까요?'))return;S.notices=S.notices.filter(n=>n.id!==id);save();renderHome();}
+
+/* ================= EVENTS ================= */
+function renderEvents(){
+  const today=todayStr();
+  const up=S.events.filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
+  const past=S.events.filter(e=>e.date<today).sort((a,b)=>b.date.localeCompare(a.date));
+  const row=(e,isPast)=>{
+    const d=new Date(e.date+'T00:00:00'),c=rsvpCounts(e);
+    const scored=Object.keys(e.scores||{}).length;
+    return `<button class="ev-row ${isPast?'past':''}" onclick="openEventDetail('${e.id}')">
+      <div class="datebox num"><div class="m">${d.getMonth()+1}월</div><div class="d">${d.getDate()}</div></div>
+      <div class="bd">
+        <div class="t">${esc(e.title)}</div>
+        <div class="m2">${esc(e.place||'장소 미정')}${e.time?' · '+esc(e.time):''}</div>
+        <div class="badges num">
+          ${typePill(e)}
+          ${isPast?(e.type!=='event'?(scored?`<span class="pill gold">스코어 ${scored}명</span>`:'<span class="pill r">스코어 미입력</span>'):`<span class="pill g">참석 ${c.y}</span>`)
+          :`<span class="pill g">참석 ${c.y}</span>${c.m?`<span class="pill y">미정 ${c.m}</span>`:''}`}
+        </div>
+      </div>
+      <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
+    </button>`;
+  };
+  el('#view-events').innerHTML=`
+    <div class="sec-head"><h2>다가오는 라운드<span class="cnt num">${up.length}</span></h2>
+      <span style="display:flex;gap:14px"><button onclick="openRegularGen()">정기 일정</button><button onclick="openEventForm()">+ 일정 추가</button></span></div>
+    <div class="card">${up.length?up.map(e=>row(e,false)).join(''):'<div class="empty">예정된 라운드가 없습니다.<br><b>+ 일정 추가</b>로 첫 라운드를 잡아보세요.</div>'}</div>
+    <div class="sec-head"><h2>지난 라운드<span class="cnt num">${past.length}</span></h2></div>
+    <div class="card">${past.length?past.map(e=>row(e,true)).join(''):'<div class="empty">지난 라운드 기록이 아직 없습니다.</div>'}</div>`;
+}
+function openEventForm(id){
+  const e=id?S.events.find(x=>x.id===id):null;
+  openSheet(`<h3 class="sh">${e?'일정 수정':'일정 추가'}</h3>
+    <label for="ef-t">제목</label><input id="ef-t" value="${esc(e?.title||'')}" placeholder="예) 8월 정기 스크린">
+    <label for="ef-ty">유형</label>
+    <select id="ef-ty">${Object.entries(EVT).map(([k,v])=>`<option value="${k}" ${e?.type===k?'selected':''}>${v.n}</option>`).join('')}</select>
+    <div class="formrow2">
+      <div><label for="ef-d">날짜</label><input id="ef-d" type="date" value="${esc(e?.date||'')}"></div>
+      <div><label for="ef-tm">시작 시간</label><input id="ef-tm" type="time" value="${esc(e?.time||'')}"></div>
+    </div>
+    <label for="ef-p">장소</label><input id="ef-p" list="venueList" value="${esc(e?.place||'')}" placeholder="예) ${VENUE_EVEN} / ○○CC">
+    <datalist id="venueList"><option value="${VENUE_EVEN}"></option><option value="${VENUE_ODD}"></option></datalist>
+    <label for="ef-f">1인 비용 (원)</label><input id="ef-f" type="number" inputmode="numeric" value="${esc(e?.fee||'')}" placeholder="그린피+카트비 등">
+    <label for="ef-m">메모</label><textarea id="ef-m" placeholder="조편성, 집결 시간, 준비물 등">${esc(e?.memo||'')}</textarea>
+    <div class="btnrow">
+      ${e?`<button class="btn danger" onclick="delEvent('${e.id}')">삭제</button>`:'<button class="btn ghost" onclick="closeSheet()">취소</button>'}
+      <button class="btn pri" onclick="saveEvent('${e?e.id:''}')">${e?'저장':'추가'}</button>
+    </div>`);
+}
+function saveEvent(id){
+  const title=el('#ef-t').value.trim(),date=el('#ef-d').value;
+  if(!title||!date){toast('제목과 날짜는 필수입니다.');return;}
+  const data={title,date,time:el('#ef-tm').value,place:el('#ef-p').value.trim(),fee:el('#ef-f').value,memo:el('#ef-m').value.trim(),type:el('#ef-ty').value};
+  if(id){Object.assign(S.events.find(x=>x.id===id),data);}
+  else{S.events.push({id:uid(),...data,rsvp:{},scores:{},noshow:{},hio:{}});}
+  save();closeSheet();renderEvents();renderHome();toast(id?'일정을 수정했습니다.':'일정을 추가했습니다.');showTab('events');
+}
+function delEvent(id){
+  if(!confirm('이 일정을 삭제할까요? 참석·스코어 기록도 함께 삭제됩니다.'))return;
+  S.events=S.events.filter(e=>e.id!==id);save();closeSheet();showTab('events');toast('일정을 삭제했습니다.');
+}
+/* 정기 스크린: 매달 둘째 주 수요일 19시, 짝수달 동명사옥 / 홀수달 골프존파크 갈현 */
+function secondWednesday(y,m){
+  const firstDow=new Date(y,m-1,1).getDay();
+  const d=1+((3-firstDow+7)%7)+7;
+  return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+function regularCandidates(n){
+  const out=[];const now=new Date();
+  let y=now.getFullYear(),m=now.getMonth()+1;
+  while(out.length<n){
+    const date=secondWednesday(y,m);
+    const dup=S.events.some(e=>e.date&&((e.type==='screen'&&e.date.slice(0,7)===date.slice(0,7))||e.date===date));
+    if(date>=todayStr()&&!dup)out.push({date,m,place:m%2===0?VENUE_EVEN:VENUE_ODD});
+    m++;if(m>12){m=1;y++;}
+    if(y>now.getFullYear()+2)break;
+  }
+  return out;
+}
+function openRegularGen(){
+  openSheet(`<h3 class="sh">정기 스크린 일정 만들기</h3>
+    <div class="hint" style="margin-top:2px">회칙 기준: 매달 둘째 주 수요일 저녁 7시, 짝수달 ${VENUE_EVEN} · 홀수달 ${VENUE_ODD}. 이미 스크린 일정이 있는 달은 건너뜁니다.</div>
+    <label for="rg-n">몇 개월치 만들까요?</label>
+    <input id="rg-n" type="number" inputmode="numeric" min="1" max="12" value="3" onchange="updateRegularPreview()" oninput="updateRegularPreview()">
+    <div id="rg-preview" style="margin-top:10px"></div>
+    <div class="btnrow"><button class="btn ghost" onclick="closeSheet()">취소</button>
+    <button class="btn pri" onclick="saveRegularGen()">일정 생성</button></div>`);
+  updateRegularPreview();
+}
+function updateRegularPreview(){
+  const n=Math.min(12,Math.max(1,Number(el('#rg-n').value)||3));
+  const list=regularCandidates(n);
+  el('#rg-preview').innerHTML=list.length?list.map(c=>
+    `<div class="rank-row"><div class="n num">${fmtDate(c.date)} 19:00</div><div style="font-size:12px;color:var(--muted)">${esc(c.place)}</div></div>`).join('')
+    :'<div class="empty" style="padding:14px">생성할 일정이 없습니다. 해당 달에 이미 스크린 일정이 있습니다.</div>';
+}
+function saveRegularGen(){
+  const n=Math.min(12,Math.max(1,Number(el('#rg-n').value)||3));
+  const list=regularCandidates(n);
+  if(!list.length){toast('생성할 일정이 없습니다.');return;}
+  list.forEach(c=>S.events.push({id:uid(),title:`${c.m}월 정기 스크린`,date:c.date,time:'19:00',place:c.place,fee:'',memo:'정기 모임 (둘째 주 수요일)',type:'screen',rsvp:{},scores:{},noshow:{},hio:{}}));
+  save();closeSheet();renderEvents();renderHome();toast(`정기 일정 ${list.length}건을 만들었습니다.`);
+}
+function openEventDetail(id){
+  const e=S.events.find(x=>x.id===id);if(!e)return;
+  const isPast=e.date<todayStr();const c=rsvpCounts(e);
+  const yesMembers=S.members.filter(m=>(e.rsvp||{})[m.id]==='yes');
+  const ranked=Object.entries(e.scores||{}).filter(([,v])=>v!==''&&v!=null)
+    .map(([mid,v])=>({mid,v:Number(v)})).sort((a,b)=>a.v-b.v);
+  openSheet(`
+    <h3 class="sh">${esc(e.title)} ${typePill(e)}</h3>
+    <div style="font-size:13px;color:var(--muted)" class="num">${fmtDate(e.date)}${e.time?' · '+esc(e.time)+' 시작':''}</div>
+    <div style="font-size:13px;color:var(--muted)">${esc(e.place||'장소 미정')}${e.fee?` · 1인 ${Number(e.fee).toLocaleString()}원`:''}</div>
+    ${e.memo?`<div style="font-size:13px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;white-space:pre-wrap">${esc(e.memo)}</div>`:''}
+    <div class="sec-head" style="margin-top:18px"><h2>참석 체크</h2><span class="cnt num">참석 ${c.y} · 미정 ${c.m} · 불참 ${c.n}</span></div>
+    <div>${S.members.length?S.members.map(m=>{
+      const st=(e.rsvp||{})[m.id]||'';
+      return `<div class="rsvp-mem"><div class="n">${esc(m.name)}</div><div class="tri">
+        <button class="y ${st==='yes'?'on':''}" onclick="setRsvp('${e.id}','${m.id}','yes')">참석</button>
+        <button class="m ${st==='maybe'?'on':''}" onclick="setRsvp('${e.id}','${m.id}','maybe')">미정</button>
+        <button class="n ${st==='no'?'on':''}" onclick="setRsvp('${e.id}','${m.id}','no')">불참</button>
+      </div></div>`;}).join(''):'<div class="empty">멤버 탭에서 멤버를 먼저 등록해 주세요.</div>'}
+    </div>
+    ${isPast&&e.type!=='event'?`
+    <div class="sec-head" style="margin-top:18px"><h2>스코어 · 기록</h2></div>
+    <div>${yesMembers.length?yesMembers.map(m=>{
+      const ns=(e.noshow||{})[m.id],hi=(e.hio||{})[m.id];
+      return `<div class="score-row"><div class="n">${esc(m.name)}</div>
+      <button class="mini ${ns?'on-r':''}" onclick="toggleNoshow('${e.id}','${m.id}')">노쇼</button>
+      <button class="mini ${hi?'on-g':''}" onclick="toggleHio('${e.id}','${m.id}')">홀인원</button>
+      ${ns?'<span class="pill r">노쇼</span>':`<input type="number" inputmode="numeric" placeholder="타수" value="${esc((e.scores||{})[m.id]??'')}" onchange="setScore('${e.id}','${m.id}',this.value)">`}
+      </div>`;}).join('')
+      :'<div class="empty">참석으로 체크된 멤버가 없습니다.<br>위에서 참석자를 먼저 체크해 주세요.</div>'}
+    </div>
+    ${ranked.length?`<div class="sec-head" style="margin-top:14px"><h2>순위</h2></div>
+    <div class="num">${ranked.map((r,i)=>`<div class="rank-row"><div class="rk">${i+1}</div><div class="n">${esc(memberName(r.mid))}</div><div class="s">${r.v}타</div></div>`).join('')}</div>`:''}
+    `:''}
+    <div class="btnrow">
+      <button class="btn ghost" onclick="openEventForm('${e.id}')">일정 수정</button>
+      <button class="btn pri" onclick="closeSheet()">완료</button>
+    </div>`);
+}
+function setRsvp(eid,mid,val){
+  const e=S.events.find(x=>x.id===eid);if(!e)return;
+  e.rsvp=e.rsvp||{};
+  e.rsvp[mid]=e.rsvp[mid]===val?'':val;if(!e.rsvp[mid])delete e.rsvp[mid];
+  save();openEventDetail(eid);renderHome();
+}
+function setScore(eid,mid,val){
+  const e=S.events.find(x=>x.id===eid);if(!e)return;
+  e.scores=e.scores||{};
+  if(val==='')delete e.scores[mid];else e.scores[mid]=Number(val);
+  save();openEventDetail(eid);
+}
+function toggleNoshow(eid,mid){
+  const e=S.events.find(x=>x.id===eid);if(!e)return;
+  e.noshow=e.noshow||{};
+  if(e.noshow[mid]){delete e.noshow[mid];}
+  else{e.noshow[mid]=true;delete (e.scores||{})[mid];delete (e.hio||{})[mid];}
+  save();openEventDetail(eid);
+}
+function toggleHio(eid,mid){
+  const e=S.events.find(x=>x.id===eid);if(!e)return;
+  e.hio=e.hio||{};
+  if(e.hio[mid]){delete e.hio[mid];}else{e.hio[mid]=true;delete (e.noshow||{})[mid];}
+  save();openEventDetail(eid);
+}
+
+/* ================= MEMBERS ================= */
+let memQuery='';
+function bestScore(mid){
+  let best=null;
+  S.events.forEach(e=>{const v=(e.scores||{})[mid];if(v!=null&&v!==''&&(best==null||v<best))best=v;});
+  return best;
+}
+function attendCount(mid){return S.events.filter(e=>e.date<todayStr()&&(e.rsvp||{})[mid]==='yes'&&!(e.noshow||{})[mid]).length;}
+function renderMembers(){
+  const q=memQuery.trim();
+  const ms=S.members.filter(m=>!q||m.name.includes(q)||(m.phone||'').includes(q))
+    .sort((a,b)=>a.name.localeCompare(b.name,'ko'));
+  el('#view-members').innerHTML=`
+    <div class="sec-head"><h2>멤버<span class="cnt num">${S.members.length}명</span></h2><button onclick="openMemberForm()">+ 멤버 추가</button></div>
+    <div class="searchbar">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="memSearch" placeholder="이름·연락처 검색" value="${esc(memQuery)}">
+    </div>
+    <div class="card">${ms.length?ms.map(m=>{
+      const b=bestScore(m.id),ns=noshowCount(m.id),hio=hioEvents(m.id).length,guest=m.mtype==='게스트';
+      return `<button class="mem-row" onclick="openMemberDetail('${m.id}')">
+        <div class="avatar" ${guest?'style="background:var(--maybe-soft);color:var(--maybe)"':''}>${esc(m.name.slice(0,1))}</div>
+        <div class="bd">
+          <div class="nm">${esc(m.name)}${m.role&&m.role!=='회원'?`<span class="role">${esc(m.role)}</span>`:''}
+            ${guest?'<span class="pill y" style="margin-left:6px">게스트</span>':''}
+            ${hio?'<span class="pill gold" style="margin-left:6px">홀인원</span>':''}
+            ${ns>=3?'<span class="pill r" style="margin-left:6px">노쇼 '+ns+'회</span>':''}</div>
+          <div class="m2 num">${m.handicap!==''&&m.handicap!=null?`G핸디 ${esc(m.handicap)} · `:''}참석 ${attendCount(m.id)}회${guest?'/2회 가능':''}${b!=null?` · 베스트 ${b}타`:''}</div>
+        </div>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
+      </button>`;}).join('')
+      :`<div class="empty">${q?'검색 결과가 없습니다.':'등록된 멤버가 없습니다.<br><b>+ 멤버 추가</b>로 모임 명단을 만들어 보세요.'}</div>`}
+    </div>`;
+  const si=el('#memSearch');
+  si.oninput=()=>{memQuery=si.value;const pos=si.selectionStart;renderMembers();const s2=el('#memSearch');s2.focus();s2.setSelectionRange(pos,pos);};
+}
+function openMemberForm(id){
+  const m=id?S.members.find(x=>x.id===id):null;
+  openSheet(`<h3 class="sh">${m?'멤버 정보 수정':'멤버 추가'}</h3>
+    <label for="mf-n">이름</label><input id="mf-n" value="${esc(m?.name||'')}" placeholder="이름">
+    <div class="formrow2">
+      <div><label for="mf-r">직책</label>
+        <select id="mf-r">${['회원','회장','부회장','부회장·총무','총무','감사'].map(r=>`<option ${m?.role===r?'selected':''}>${r}</option>`).join('')}</select></div>
+      <div><label for="mf-ty">구분</label>
+        <select id="mf-ty">${['정회원','게스트'].map(t=>`<option ${(m?.mtype||'정회원')===t?'selected':''}>${t}</option>`).join('')}</select></div>
+    </div>
+    <label for="mf-h">골프존 G핸디</label><input id="mf-h" type="number" inputmode="numeric" value="${esc(m?.handicap??'')}" placeholder="골프존 앱에서 확인 후 입력">
+    <div class="hint">연락처와 골프존 G핸디는 본인이 직접 입력해 주세요. 입력한 내용은 이 기기에 저장되며, 총무가 취합해 공식 데이터로 관리합니다.</div>
+    <label for="mf-p">연락처</label><input id="mf-p" type="tel" value="${esc(m?.phone||'')}" placeholder="010-0000-0000">
+    <label for="mf-j">가입일</label><input id="mf-j" type="date" value="${esc(m?.joined||'')}">
+    <label for="mf-m">메모</label><textarea id="mf-m" placeholder="소속, 선호 시간대 등">${esc(m?.memo||'')}</textarea>
+    <div class="btnrow">
+      ${m?`<button class="btn danger" onclick="delMember('${m.id}')">삭제</button>`:'<button class="btn ghost" onclick="closeSheet()">취소</button>'}
+      <button class="btn pri" onclick="saveMember('${m?m.id:''}')">${m?'저장':'추가'}</button>
+    </div>`);
+}
+function saveMember(id){
+  const name=el('#mf-n').value.trim();if(!name){toast('이름을 입력해 주세요.');return;}
+  const data={name,role:el('#mf-r').value,mtype:el('#mf-ty').value,handicap:el('#mf-h').value,phone:el('#mf-p').value.trim(),joined:el('#mf-j').value,memo:el('#mf-m').value.trim()};
+  if(id){Object.assign(S.members.find(x=>x.id===id),data);}
+  else{S.members.push({id:uid(),...data});}
+  save();closeSheet();renderMembers();toast(id?'저장했습니다.':name+' 님을 추가했습니다.');
+}
+function delMember(id){
+  if(!confirm('이 멤버를 삭제할까요? 과거 참석·스코어 기록에는 "(탈퇴 멤버)"로 표시됩니다.'))return;
+  S.members=S.members.filter(m=>m.id!==id);save();closeSheet();renderMembers();toast('삭제했습니다.');
+}
+function openMemberDetail(id){
+  const m=S.members.find(x=>x.id===id);if(!m)return;
+  const b=bestScore(id);
+  const recent=S.events.filter(e=>(e.scores||{})[id]!=null&&(e.scores||{})[id]!=='')
+    .sort((a,b2)=>b2.date.localeCompare(a.date)).slice(0,5);
+  openSheet(`
+    <h3 class="sh">${esc(m.name)} ${m.role&&m.role!=='회원'?`<span style="font-size:12px;color:var(--gold)">${esc(m.role)}</span>`:''}</h3>
+    <div style="font-size:13px;color:var(--muted)" class="num">
+      ${m.mtype==='게스트'?'게스트 · ':''}${m.handicap!==''&&m.handicap!=null?`G핸디 ${esc(m.handicap)} · `:''}참석 ${attendCount(id)}회${m.mtype==='게스트'?' (최대 2회, 2027년부터 적용)':''}${b!=null?` · 베스트 ${b}타`:''}
+      ${noshowCount(id)?`<br><span style="color:var(--flag)">노쇼 ${noshowCount(id)}회${noshowCount(id)>=3?' — 회칙상 제외 검토 대상':''}</span>`:''}
+      ${hioEvents(id).length?`<br><span style="color:var(--gold)">🏆 홀인원: ${hioEvents(id).map(e=>esc(e.title)+' ('+e.date+')').join(', ')} — 회비로 명패 제작</span>`:''}
+      ${m.joined?`<br>가입일 ${fmtDate(m.joined)}`:''}
+      ${m.memo?`<br>${esc(m.memo)}`:''}
+    </div>
+    ${m.phone?`<div class="btnrow" style="margin-top:14px">
+      <a class="btn ghost" style="text-decoration:none" href="tel:${esc(m.phone)}">전화</a>
+      <a class="btn ghost" style="text-decoration:none" href="sms:${esc(m.phone)}">문자</a>
+    </div>`:''}
+    ${recent.length?`<div class="sec-head" style="margin-top:16px"><h2>최근 스코어</h2></div>
+    <div class="num">${recent.map(e=>`<div class="rank-row"><div class="n">${esc(e.title)}<span style="font-weight:500;color:var(--faint);font-size:12px"> · ${fmtDate(e.date)}</span></div><div class="s">${(e.scores||{})[id]}타</div></div>`).join('')}</div>`:''}
+    <div class="btnrow">
+      <button class="btn ghost" onclick="openMemberForm('${id}')">정보 수정</button>
+      <button class="btn pri" onclick="closeSheet()">완료</button>
+    </div>`);
+}
+
+/* ================= RULES ================= */
+function renderRules(){
+  el('#view-rules').innerHTML=`
+    <div class="sec-head"><h2><button onclick="showTab('more')" style="color:var(--faint);margin-right:6px">←</button> 모임 회칙</h2>
+      <button onclick="openRulesEdit()">편집</button></div>
+    ${S.rulesDraft?`<div class="draftband">아래 회칙은 편집 가능한 <b>초안</b>입니다. 회비 금액 등 빈칸을 모임에서 확정한 내용으로 채운 뒤, [편집]에서 "확정" 처리해 주세요.</div>`:''}
+    <div class="card">
+      <div class="pad" style="border-bottom:1px solid var(--line2)">
+        <div class="eyebrow">CLUB RULES</div>
+        <div style="font-weight:900;font-size:17px">${esc(S.club.name)} 회칙</div>
+        ${S.rulesUpdated?`<div style="font-size:12px;color:var(--faint)" class="num">최종 개정 ${fmtDate(S.rulesUpdated)}</div>`:''}
+      </div>
+      ${S.rules.map(r=>`<div class="rule"><h3>${esc(r.title)}</h3><p>${esc(r.body)}</p></div>`).join('')}
+    </div>`;
+}
+function openRulesEdit(){
+  openSheet(`<h3 class="sh">회칙 편집</h3>
+    <div class="hint" style="margin:2px 0 6px">조항을 수정·추가·삭제할 수 있습니다. 저장 시 개정일이 오늘로 기록됩니다.</div>
+    <div id="ruleEditList">${S.rules.map((r,i)=>`
+      <div style="border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px" data-idx="${i}">
+        <input class="re-t" value="${esc(r.title)}" placeholder="조항 제목" style="font-weight:700">
+        <textarea class="re-b" style="margin-top:6px">${esc(r.body)}</textarea>
+        <button style="font-size:12px;color:var(--flag);font-weight:700;margin-top:4px" onclick="this.parentElement.remove()">이 조항 삭제</button>
+      </div>`).join('')}
+    </div>
+    <button class="btn ghost" style="width:100%;margin-top:10px" onclick="addRuleField()">+ 조항 추가</button>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:16px;font-size:13.5px;color:var(--ink)">
+      <input type="checkbox" id="ruleConfirm" ${S.rulesDraft?'':'checked'} style="width:auto"> 모임에서 확정한 회칙입니다 (초안 표시 제거)
+    </label>
+    <div class="btnrow"><button class="btn ghost" onclick="closeSheet()">취소</button>
+    <button class="btn pri" onclick="saveRules()">저장</button></div>`);
+}
+function addRuleField(){
+  const d=document.createElement('div');
+  d.style.cssText='border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px';
+  d.innerHTML=`<input class="re-t" placeholder="조항 제목 (예: 제11조 (기타))" style="font-weight:700">
+    <textarea class="re-b" style="margin-top:6px" placeholder="내용"></textarea>
+    <button style="font-size:12px;color:var(--flag);font-weight:700;margin-top:4px" onclick="this.parentElement.remove()">이 조항 삭제</button>`;
+  el('#ruleEditList').appendChild(d);
+}
+function saveRules(){
+  const items=[...document.querySelectorAll('#ruleEditList > div')].map(d=>({
+    id:uid(),title:d.querySelector('.re-t').value.trim(),body:d.querySelector('.re-b').value.trim()
+  })).filter(r=>r.title||r.body);
+  if(!items.length){toast('조항이 하나 이상 필요합니다.');return;}
+  S.rules=items;S.rulesDraft=!el('#ruleConfirm').checked;S.rulesUpdated=todayStr();
+  save();closeSheet();renderRules();toast('회칙을 저장했습니다.');
+}
+
+/* ================= FEES (회비 관리) ================= */
+let feeYear=new Date().getFullYear();
+function renderFees(){
+  const F=getFees(feeYear);
+  const regulars=S.members.filter(m=>m.mtype!=='게스트');
+  const qAmt=F.amount/4;
+  const totQ=regulars.reduce((s,m)=>s+((F.paid[m.id]||[]).length),0);
+  const paidCnt=regulars.filter(m=>(F.paid[m.id]||[]).length>=4).length;
+  const income=totQ*qAmt;
+  const spent=F.expenses.reduce((s,x)=>s+Number(x.amount||0),0);
+  el('#view-fees').innerHTML=`
+    <div class="sec-head"><h2><button onclick="showTab('more')" style="color:var(--faint);margin-right:6px">←</button> 회비 관리</h2>
+      <span style="display:flex;gap:8px;align-items:center" class="num">
+        <button onclick="feeYear--;renderFees()" aria-label="이전 연도">◀</button><b>${feeYear}년</b><button onclick="feeYear++;renderFees()" aria-label="다음 연도">▶</button>
+      </span></div>
+    ${feeYear===2026?'<div class="draftband">회칙: 2026년 말까지 회비는 사용하지 않고 적립하는 것을 원칙으로 합니다.</div>':''}
+    <div class="stats num">
+      <div class="stat"><div class="v">${paidCnt}/${regulars.length}</div><div class="k">완납</div></div>
+      <div class="stat"><div class="v" style="font-size:14px;line-height:2">${fmtWon(income)}</div><div class="k">수입</div></div>
+      <div class="stat"><div class="v" style="font-size:14px;line-height:2">${fmtWon(income-spent)}</div><div class="k">잔액</div></div>
+    </div>
+    <div class="card"><div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13px;color:var(--muted)">연회비 <b class="num" style="color:var(--ink)">${fmtWon(F.amount)}</b> = 분기당 <b class="num" style="color:var(--ink)">${fmtWon(qAmt)}</b></span>
+      <button style="font-size:12.5px;font-weight:700;color:var(--green)" onclick="editFeeAmount()">금액 수정</button>
+    </div></div>
+    <div class="sec-head"><h2>분기별 납부 현황</h2><button onclick="copyFeeReport()">공유용 내역 복사</button></div>
+    <div class="card">${regulars.length?regulars.map(m=>{
+      const qs=F.paid[m.id]||[];
+      return `<div class="rsvp-mem" style="padding:9px 16px"><div class="n">${esc(m.name)}</div>
+      <div style="display:flex;gap:4px" class="num">${[1,2,3,4].map(q=>
+        `<button class="mini ${qs.includes(q)?'on-g':''}" style="padding:5px 8px" onclick="toggleQuarter('${m.id}',${q})">${q}Q</button>`).join('')}
+      </div></div>`;}).join('')
+      :'<div class="empty">정회원이 없습니다.</div>'}
+    </div>
+    <div class="sec-head"><h2>지출 내역<span class="cnt num">${F.expenses.length}건 · ${fmtWon(spent)}</span></h2><button onclick="openExpenseForm()">+ 지출 기록</button></div>
+    <div class="card">${F.expenses.length?F.expenses.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`
+      <div class="notice-row"><span class="flagdot" style="background:var(--gold)"></span>
+        <div class="tx">${esc(x.desc)}<div class="dt num">${fmtDate(x.date)} · ${fmtWon(x.amount)}</div></div>
+        <button class="del" onclick="delExpense('${x.id}')" aria-label="지출 삭제">×</button></div>`).join('')
+      :'<div class="empty">지출 내역이 없습니다.<br>회칙에 따라 사용 내역은 분기 또는 반기별로 공유합니다.</div>'}
+    </div>`;
+}
+function toggleQuarter(mid,q){
+  const F=getFees(feeYear);
+  const qs=F.paid[mid]||[];
+  F.paid[mid]=qs.includes(q)?qs.filter(x=>x!==q):[...qs,q].sort();
+  if(!F.paid[mid].length)delete F.paid[mid];
+  save();renderFees();
+}
+function editFeeAmount(){
+  const F=getFees(feeYear);
+  const v=prompt(`${feeYear}년 연회비 금액(원)`,F.amount);
+  if(v==null)return;
+  const n=Number(String(v).replace(/[^0-9]/g,''));
+  if(!n){toast('숫자로 입력해 주세요.');return;}
+  F.amount=n;save();renderFees();
+}
+function openExpenseForm(){
+  openSheet(`<h3 class="sh">지출 기록</h3>
+    <label for="ex-d">날짜</label><input id="ex-d" type="date" value="${todayStr()}">
+    <label for="ex-t">내용</label><input id="ex-t" placeholder="예) 현수막 제작">
+    <label for="ex-a">금액 (원)</label><input id="ex-a" type="number" inputmode="numeric" placeholder="예) 50000">
+    <div class="btnrow"><button class="btn ghost" onclick="closeSheet()">취소</button>
+    <button class="btn pri" onclick="saveExpense()">기록</button></div>`);
+}
+function saveExpense(){
+  const desc=el('#ex-t').value.trim(),amount=Number(el('#ex-a').value);
+  if(!desc||!amount){toast('내용과 금액을 입력해 주세요.');return;}
+  getFees(feeYear).expenses.push({id:uid(),date:el('#ex-d').value||todayStr(),desc,amount});
+  save();closeSheet();renderFees();toast('지출을 기록했습니다.');
+}
+function delExpense(id){
+  if(!confirm('이 지출 기록을 삭제할까요?'))return;
+  const F=getFees(feeYear);F.expenses=F.expenses.filter(x=>x.id!==id);save();renderFees();
+}
+function copyFeeReport(){
+  const F=getFees(feeYear);
+  const regulars=S.members.filter(m=>m.mtype!=='게스트');
+  const qAmt=F.amount/4;
+  const totQ=regulars.reduce((s,m)=>s+((F.paid[m.id]||[]).length),0);
+  const spent=F.expenses.reduce((s,x)=>s+Number(x.amount||0),0);
+  const stat=m=>{const qs=F.paid[m.id]||[];return qs.length>=4?'완납':qs.length?qs.join('·')+'분기 납부':'미납';};
+  const lines=[
+    `[${S.club.name}] ${feeYear}년 회비 현황 (${todayStr()} 기준)`,
+    `· 연회비 ${fmtWon(F.amount)} = 분기당 ${fmtWon(qAmt)} (정회원 기준)`,
+    `· 수입: ${fmtWon(totQ*qAmt)} (분기 납부 ${totQ}건)`,
+    ...regulars.map(m=>`  - ${m.name}: ${stat(m)}`),
+    `· 지출: ${F.expenses.length}건 ${fmtWon(spent)}`,
+    ...F.expenses.map(x=>`  - ${x.date} ${x.desc} ${fmtWon(x.amount)}`),
+    `· 잔액: ${fmtWon(totQ*qAmt-spent)}`
+  ];
+  const txt=lines.join('\n');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>toast('내역을 복사했습니다. 카톡방에 붙여넣으세요.'),()=>toast('복사에 실패했습니다.'));
+  }else{prompt('아래 내용을 복사하세요',txt);}
+}
+
+/* ================= MANITO (마니또) ================= */
+function openManito(){
+  const last=S.manito;
+  if(last){
+    openSheet(`<h3 class="sh">마니또 뽑기</h3>
+      <div class="draftband" style="margin-top:8px">진행 중인 뽑기 (${fmtDate(last.date)} · ${Object.keys(last.pairs).length}명)<br>폰을 돌려가며 <b>자기 이름만</b> 눌러 확인하세요.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
+        ${Object.keys(last.pairs).map(gid=>`<button class="btn ${last.revealed[gid]?'ghost':'pri'}" style="padding:11px 4px;font-size:13px" onclick="revealManito('${gid}')">${esc(memberName(gid))}${last.revealed[gid]?' ✓':''}</button>`).join('')}
+      </div>
+      <div class="hint">결과는 이 기기에만 저장됩니다. 송년회 자리에서 진행자 폰 하나로 돌려보는 방식을 권장합니다.</div>
+      <div class="btnrow"><button class="btn danger" onclick="resetManito()">다시 뽑기</button><button class="btn pri" onclick="closeSheet()">닫기</button></div>`);
+  }else{
+    openSheet(`<h3 class="sh">마니또 뽑기</h3>
+      <div class="hint" style="margin-top:2px">송년회 마니또 행사용 (회칙: 선물 1인당 3만~5만 원). 참가자를 고르고 뽑기를 실행하세요 — 자기 자신은 절대 걸리지 않습니다.</div>
+      <div style="margin-top:8px">${S.members.map(m=>`<label style="display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--ink);letter-spacing:0;margin:0;padding:8px 0;border-top:1px solid var(--line2)">
+        <input type="checkbox" class="mnt-c" value="${m.id}" ${m.mtype!=='게스트'?'checked':''} style="width:auto">${esc(m.name)}</label>`).join('')}</div>
+      <div class="btnrow"><button class="btn ghost" onclick="closeSheet()">취소</button><button class="btn pri" onclick="drawManito()">뽑기 실행</button></div>`);
+  }
+}
+function drawManito(){
+  const ids=[...document.querySelectorAll('.mnt-c:checked')].map(c=>c.value);
+  if(ids.length<3){toast('3명 이상 선택해 주세요.');return;}
+  let rec;
+  do{
+    rec=ids.slice();
+    for(let i=rec.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[rec[i],rec[j]]=[rec[j],rec[i]];}
+  }while(rec.some((r,i)=>r===ids[i]));
+  const pairs={};ids.forEach((g,i)=>pairs[g]=rec[i]);
+  S.manito={date:todayStr(),pairs,revealed:{}};
+  save();openManito();
+}
+function revealManito(gid){
+  const mn=S.manito;if(!mn)return;
+  if(!confirm(`${memberName(gid)} 님 본인이 맞나요?\n다른 사람은 화면을 보지 마세요!`))return;
+  alert(`🎁 ${memberName(gid)} 님이 선물할 상대는\n\n【 ${memberName(mn.pairs[gid])} 】\n\n비밀 유지! 확인 후 다음 사람에게 넘겨주세요.`);
+  mn.revealed[gid]=true;save();openManito();
+}
+function resetManito(){
+  if(!confirm('현재 뽑기 결과를 지우고 새로 뽑을까요?'))return;
+  S.manito=null;save();openManito();
+}
+
+/* ================= MORE / SETTINGS ================= */
+function renderMore(){
+  el('#view-more').innerHTML=`
+    <div class="sec-head"><h2>모임 관리</h2></div>
+    <div class="card">
+      <button class="menu-row" onclick="showTab('rules')">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-4-2.5L11 21l-4-2.5L5 20V4a1 1 0 0 1 1-1z"/><path d="M9 8h6M9 12h6"/></svg></span>
+        <span class="bd">모임 회칙<span class="sub">${S.rulesDraft?'초안 상태 · 확정 필요':'확정됨'}${S.rulesUpdated?' · 개정 '+S.rulesUpdated:''}</span></span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
+      </button>
+      <button class="menu-row" onclick="showTab('fees')">
+        <span class="ic" style="background:var(--gold-soft);color:var(--gold)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.5 15c.6.9 1.5 1.4 2.5 1.4 1.5 0 2.7-.9 2.7-2.2 0-2.8-5-1.6-5-4.4 0-1.2 1-2.1 2.3-2.1 1 0 1.8.4 2.4 1.2"/></svg></span>
+        <span class="bd">회비 관리<span class="sub">연회비 ${fmtWon(getFees(new Date().getFullYear()).amount)}(분기 ${fmtWon(getFees(new Date().getFullYear()).amount/4)}) · 완납 ${S.members.filter(m=>m.mtype!=='게스트'&&(getFees(new Date().getFullYear()).paid[m.id]||[]).length>=4).length}/${S.members.filter(m=>m.mtype!=='게스트').length}명</span></span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
+      </button>
+      <button class="menu-row" onclick="openManito()">
+        <span class="ic" style="background:var(--flag-soft);color:var(--flag)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M4 12v9h16v-9M12 8c-2 0-4-1-4-3s3-2.5 4 3c1-5.5 4-5 4-3s-2 3-4 3z"/></svg></span>
+        <span class="bd">마니또 뽑기<span class="sub">${S.manito?`진행 중 (${S.manito.date})`:'송년회(12/9) 행사용'}</span></span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
+      </button>
+      <button class="menu-row" onclick="openClubForm()">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/></svg></span>
+        <span class="bd">모임 정보<span class="sub">${esc(S.club.name)}${S.club.founded?' · 창립 '+esc(S.club.founded):''}</span></span>
+        <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="sec-head"><h2>바로가기</h2></div>
+    <div class="card">
+      <a class="menu-row" style="text-decoration:none;color:var(--ink)" href="https://m.golfzon.com" target="_blank" rel="noopener">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M8 12h8M12 8v8"/></svg></span>
+        <span class="bd">골프존<span class="sub">스크린 예약·기록 (외부 사이트)</span></span>
+      </a>
+      <a class="menu-row" style="text-decoration:none;color:var(--ink)" href="https://www.smartscore.kr" target="_blank" rel="noopener">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5M4 19h16"/><path d="M7 15l4-4 3 2 5-6"/></svg></span>
+        <span class="bd">스마트스코어<span class="sub">필드 스코어 기록 (외부 사이트)</span></span>
+      </a>
+    </div>
+    <div class="sec-head"><h2>데이터</h2></div>
+    <div class="card">
+      <div class="menu-row" style="cursor:default">
+        <span class="ic" style="${syncState==='on'?'':'background:var(--maybe-soft);color:var(--maybe)'}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3a9 9 0 0 1 9 9M12 7a5 5 0 0 1 5 5"/><circle cx="12" cy="16" r="1.6" fill="currentColor" stroke="none"/></svg></span>
+        <span class="bd">실시간 공유<span class="sub">${syncLabel()}</span></span>
+      </div>
+      <button class="menu-row" onclick="exportData()">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v11M8 10l4 4 4-4"/><path d="M4 17v3h16v-3"/></svg></span>
+        <span class="bd">데이터 백업 (내보내기)<span class="sub">멤버·일정·회칙·공지를 파일로 저장</span></span>
+      </button>
+      <button class="menu-row" onclick="document.getElementById('importInput').click()">
+        <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 14V3M8 7l4-4 4 4"/><path d="M4 17v3h16v-3"/></svg></span>
+        <span class="bd">데이터 복원 (가져오기)<span class="sub">백업 파일로 현재 데이터를 교체</span></span>
+      </button>
+      <button class="menu-row" onclick="resetAll()">
+        <span class="ic" style="background:var(--flag-soft);color:var(--flag)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg></span>
+        <span class="bd">전체 초기화<span class="sub">모든 데이터 삭제 (되돌릴 수 없음)</span></span>
+      </button>
+    </div>
+    <div class="card"><div class="pad">
+      <div class="eyebrow">이 앱에 대하여</div>
+      <div class="hint" style="margin-top:4px">
+        ${SYNC_URL?'· <b>실시간 공유 모드</b>: 누군가 일정·참석·회비를 수정하면 모든 멤버 화면에 곧바로 반영됩니다. 인터넷이 끊기면 이 기기에 저장했다가 다시 연결되면 올립니다.<br>':'· 현재 <b>이 기기에만 저장</b>됩니다. 실시간 공유 서버 연결 전까지는 [백업 → 파일 공유 → 복원]으로 데이터를 맞추세요.<br>'}
+        · <b>홈 화면에 추가</b>하면 일반 앱처럼 사용할 수 있습니다.<br>
+        &nbsp;&nbsp;아이폰: Safari 공유 버튼 → "홈 화면에 추가"<br>
+        &nbsp;&nbsp;갤럭시: 크롬 메뉴(⋮) → "홈 화면에 추가"<br>
+        · 사진·영상은 단톡방에서 공유하는 것을 권장합니다. 이 앱은 일정·회비·회칙·멤버 관리에 집중합니다.
+      </div>
+    </div></div>`;
+}
+function openClubForm(){
+  openSheet(`<h3 class="sh">모임 정보</h3>
+    <label for="cf-n">모임명</label><input id="cf-n" value="${esc(S.club.name)}">
+    <label for="cf-f">창립 (연도 또는 날짜)</label><input id="cf-f" value="${esc(S.club.founded)}" placeholder="예) 2024">
+    <label for="cf-i">소개</label><textarea id="cf-i" placeholder="모임 한 줄 소개">${esc(S.club.intro)}</textarea>
+    <div class="btnrow"><button class="btn ghost" onclick="closeSheet()">취소</button>
+    <button class="btn pri" onclick="saveClub()">저장</button></div>`);
+}
+function saveClub(){
+  const n=el('#cf-n').value.trim();if(!n){toast('모임명을 입력해 주세요.');return;}
+  S.club={name:n,founded:el('#cf-f').value.trim(),intro:el('#cf-i').value.trim()};
+  save();closeSheet();renderMore();el('#clubName').textContent=S.club.name;toast('저장했습니다.');
+}
+function exportData(){
+  const payload={app:'bim-milbirdie',version:1,exportedAt:new Date().toISOString(),data:S};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`${S.club.name}_백업_${todayStr()}.json`;
+  a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  toast('백업 파일을 내려받았습니다. 카톡 등으로 공유하세요.');
+}
+el('#importInput').onchange=ev=>{
+  const f=ev.target.files[0];ev.target.value='';if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      const d=p&&p.app==='bim-milbirdie'&&p.data?p.data:null;
+      if(!d||!Array.isArray(d.members)||!Array.isArray(d.events))throw 0;
+      if(!confirm(`백업(${p.exportedAt?p.exportedAt.slice(0,10):'날짜 미상'}) 데이터로 교체할까요?\n멤버 ${d.members.length}명 · 일정 ${d.events.length}건\n\n현재 이 기기의 데이터는 사라집니다.`))return;
+      S=Object.assign(freshState(),d);normalizeState();save();showTab('home');toast('복원했습니다.');
+    }catch(e){toast('올바른 백업 파일이 아닙니다.');}
+  };
+  r.readAsText(f);
+};
+function resetAll(){
+  if(!confirm('현재 데이터를 모두 지우고 공식 기본 데이터(회칙·멤버 16명·확정 일정)로 초기화할까요? 되돌릴 수 없습니다.'))return;
+  if(!confirm('정말 초기화합니다. 백업 파일이 없다면 [취소] 후 먼저 백업하세요.'))return;
+  S=freshState();save();showTab('home');toast('공식 기본 데이터로 초기화했습니다.');
+}
+
+/* ================= boot ================= */
+showTab('home');
+syncInit();
+</script>
+
+</body>
+</html>
