@@ -390,7 +390,7 @@ try{const t=localStorage.getItem('bmb.theme');if(t)document.documentElement.setA
 
 /* ================= 암호 잠금 =================
    모임 암호(4자리). 변경 시 이 값을 바꿔 재배포하면 모든 멤버에게 적용됩니다. */
-const APP_PIN='2026';
+const APP_PIN='0708';
 function pinHash(p){let h=7;for(const c of String(p)+'|bmb')h=(h*131+c.charCodeAt(0))>>>0;return h.toString(36);}
 let pinBuf='';
 function pinRender(){[...document.querySelectorAll('#lockDots i')].forEach((d,i)=>d.classList.toggle('f',i<pinBuf.length));}
@@ -423,7 +423,7 @@ document.addEventListener('keydown',e=>{
    Firebase Realtime Database URL을 넣으면 모든 멤버 기기에 실시간 반영됩니다.
    예: const SYNC_URL='https://bim-milbirdie-default-rtdb.asia-southeast1.firebasedatabase.app/club.json';
    비워두면(현재) 이 기기에만 저장됩니다. */
-const SYNC_URL='';
+const SYNC_URL='https://bimmilbirdie-default-rtdb.asia-southeast1.firebasedatabase.app/club.json';
 
 /* ================= state ================= */
 const VENUE_EVEN='동명사옥', VENUE_ODD='골프존파크 갈현 지식정보타운';
